@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pragati Engineering College — Campus AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0a1628;
+  --accent: #00c6ff;
+  --accent2: #0072ff;
+  --gold: #e8b84b;
+  --white: #ffffff;
+  --glass: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.12);
+  --error: #ff6b6b;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* FIX: allow page to scroll so submit button is always reachable */
+body {
+  min-height:100vh;
+  font-family:'DM Sans',sans-serif;
+  background:var(--navy);
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+
+.bg { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+.bg-gradient { position:absolute; inset:0; background: radial-gradient(ellipse 80% 60% at 20% 50%, #0d2a5e 0%, transparent 60%), radial-gradient(ellipse 60% 80% at 80% 20%, #07184a 0%, transparent 50%), linear-gradient(135deg,#060d1e 0%,#0a1628 50%,#061220 100%); }
+.orb { position:absolute; border-radius:50%; filter:blur(80px); opacity:0.35; animation:drift 12s ease-in-out infinite; }
+.orb1 { width:500px; height:500px; background:radial-gradient(circle,#0072ff,transparent); top:-100px; left:-100px; }
+.orb2 { width:400px; height:400px; background:radial-gradient(circle,#00c6ff,transparent); bottom:-80px; right:-80px; animation-delay:-5s; }
+.orb3 { width:300px; height:300px; background:radial-gradient(circle,#e8b84b44,transparent); top:40%; left:50%; animation-delay:-8s; }
+@keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-20px) scale(1.05)} 66%{transform:translate(-20px,30px) scale(0.95)} }
+.grid-lines { position:absolute; inset:0; background-image:linear-gradient(rgba(0,198,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,198,255,0.04) 1px,transparent 1px); background-size:60px 60px; }
+.particles { position:absolute; inset:0; }
+.particle { position:absolute; width:3px; height:3px; background:var(--accent); border-radius:50%; opacity:0; animation:rise linear infinite; }
+@keyframes rise { 0%{transform:translateY(100vh) translateX(0);opacity:0} 10%{opacity:0.6} 90%{opacity:0.2} 100%{transform:translateY(-10vh) translateX(40px);opacity:0} }
+
+.page {
+  position:relative; z-index:1;
+  display:flex; min-height:100vh;
+}
+
+/* LEFT PANEL */
+.left-panel { flex:1.1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:60px 70px; }
+.college-badge { display:inline-flex; align-items:center; gap:10px; background:rgba(232,184,75,0.12); border:1px solid rgba(232,184,75,0.25); border-radius:100px; padding:8px 18px; margin-bottom:40px; animation:fadeUp 0.8s ease both; }
+.badge-dot { width:8px; height:8px; background:var(--gold); border-radius:50%; animation:pulse-dot 2s ease infinite; }
+@keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 0 rgba(232,184,75,0.5)} 50%{box-shadow:0 0 0 6px rgba(232,184,75,0)} }
+.badge-text { font-size:12px; font-weight:500; color:var(--gold); letter-spacing:0.08em; text-transform:uppercase; }
+.hero-title { font-family:'Playfair Display',serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:var(--white); line-height:1.15; margin-bottom:20px; animation:fadeUp 0.8s 0.1s ease both; }
+.hero-title .accent-word { background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.hero-sub { font-size:16px; color:rgba(255,255,255,0.5); line-height:1.7; max-width:420px; margin:0 auto 50px; animation:fadeUp 0.8s 0.2s ease both; }
+.features { display:flex; flex-direction:column; gap:16px; animation:fadeUp 0.8s 0.3s ease both; align-items:center; width:100%; }
+.feature-item { display:flex; align-items:center; gap:14px; max-width:360px; width:100%; }
+.feature-icon { width:40px; height:40px; border-radius:10px; background:var(--glass); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.feature-text { font-size:14px; color:rgba(255,255,255,0.65); }
+.feature-text strong { color:rgba(255,255,255,0.9); font-weight:500; display:block; font-size:14px; }
+.stats-row { display:flex; gap:40px; margin-top:60px; padding-top:40px; border-top:1px solid var(--glass-border); animation:fadeUp 0.8s 0.4s ease both; justify-content:center; }
+.stat-num { font-family:'Playfair Display',serif; font-size:28px; font-weight:700; color:var(--white); text-align:center; }
+.stat-label { font-size:12px; color:rgba(255,255,255,0.4); margin-top:2px; letter-spacing:0.05em; text-align:center; }
+.divider-line { width:1px; background:linear-gradient(to bottom,transparent,var(--glass-border) 30%,var(--glass-border) 70%,transparent); margin:40px 0; flex-shrink:0; }
+
+/* RIGHT PANEL — scrollable on small screens */
+.right-panel {
+  width:480px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  padding:40px 50px;
+}
+.login-card {
+  width:100%;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:24px;
+  padding:44px 40px;
+  animation:slideIn 0.9s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+  box-shadow:0 32px 80px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.08);
+}
+@keyframes slideIn { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:translateX(0)} }
+.card-top { text-align:center; margin-bottom:36px; }
+.logo-ring { width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg,var(--accent2),var(--accent)); display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 20px; box-shadow:0 8px 24px rgba(0,114,255,0.4); }
+.card-title { font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:var(--white); margin-bottom:6px; }
+.card-sub { font-size:14px; color:rgba(255,255,255,0.45); }
+.auth-tabs { display:flex; background:rgba(0,0,0,0.3); border-radius:10px; padding:4px; margin-bottom:28px; }
+.tab-btn { flex:1; padding:9px; background:transparent; border:none; color:rgba(255,255,255,0.45); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500; border-radius:7px; cursor:pointer; transition:all 0.25s; }
+.tab-btn.active { background:linear-gradient(135deg,var(--accent2),var(--accent)); color:white; box-shadow:0 4px 12px rgba(0,114,255,0.35); }
+.field { margin-bottom:18px; }
+.field label { display:block; font-size:12px; font-weight:500; color:rgba(255,255,255,0.55); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:8px; }
+.input-wrap { position:relative; }
+.input-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:16px; pointer-events:none; }
+.field input { width:100%; padding:13px 14px 13px 42px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--white); font-family:'DM Sans',sans-serif; font-size:14px; outline:none; transition:all 0.25s; }
+.field input::placeholder { color:rgba(255,255,255,0.25); }
+.field input:focus { border-color:var(--accent); background:rgba(0,198,255,0.08); box-shadow:0 0 0 3px rgba(0,198,255,0.12); }
+.field input.error { border-color:var(--error); background:rgba(255,107,107,0.07); }
+.field-error { font-size:12px; color:var(--error); margin-top:5px; display:none; }
+.field-error.show { display:block; }
+.row-between { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+.remember-label { display:flex; align-items:center; gap:8px; font-size:13px; color:rgba(255,255,255,0.5); cursor:pointer; }
+.remember-label input[type="checkbox"] { accent-color:var(--accent); width:15px; height:15px; cursor:pointer; }
+.forgot-link { font-size:13px; color:var(--accent); text-decoration:none; transition:opacity 0.2s; }
+.forgot-link:hover { opacity:0.75; }
+.submit-btn { width:100%; padding:14px; background:linear-gradient(135deg,var(--accent2) 0%,var(--accent) 100%); border:none; border-radius:10px; color:white; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:500; cursor:pointer; letter-spacing:0.02em; transition:all 0.25s; position:relative; overflow:hidden; box-shadow:0 6px 20px rgba(0,114,255,0.4); }
+.submit-btn::after { content:''; position:absolute; top:0; left:-100%; width:60%; height:100%; background:rgba(255,255,255,0.15); transform:skewX(-20deg); transition:left 0.5s; }
+.submit-btn:hover::after { left:140%; }
+.submit-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(0,114,255,0.5); }
+.submit-btn:active { transform:translateY(0); }
+.submit-btn.loading { pointer-events:none; }
+.submit-btn.loading .btn-text { opacity:0; }
+.submit-btn .spinner { position:absolute; inset:0; display:none; align-items:center; justify-content:center; }
+.submit-btn.loading .spinner { display:flex; }
+.spinner-ring { width:20px; height:20px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.success-msg { display:none; text-align:center; padding:20px 0; animation:fadeUp 0.5s ease; }
+.success-msg.show { display:block; }
+.success-icon { width:56px; height:56px; background:linear-gradient(135deg,#00b09b,#00c6ff); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; margin:0 auto 16px; box-shadow:0 8px 20px rgba(0,182,155,0.4); }
+.success-msg p { color:rgba(255,255,255,0.6); font-size:14px; margin-top:6px; }
+.success-msg strong { color:white; font-size:16px; display:block; }
+.switch-prompt { text-align:center; margin-top:24px; font-size:13px; color:rgba(255,255,255,0.4); }
+.switch-prompt a { color:var(--accent); text-decoration:none; font-weight:500; cursor:pointer; }
+.switch-prompt a:hover { text-decoration:underline; }
+.signup-fields { display:none; }
+.signup-fields.active { display:block; }
+.login-fields.hidden { display:none; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* RESPONSIVE — stack vertically on small screens so card is always reachable */
+@media(max-width:900px) {
+  .page { flex-direction:column; align-items:stretch; min-height:100vh; }
+  .left-panel { padding:40px 28px 30px; }
+  .divider-line { display:none; }
+  .right-panel { width:100%; padding:24px 20px 48px; }
+  .login-card { padding:32px 24px; }
+}
+@media(max-width:500px) {
+  .left-panel { padding:32px 20px 24px; }
+  .stats-row { gap:24px; }
+}
+</style>
+</head>
+<body>
+<div class="bg">
+  <div class="bg-gradient"></div>
+  <div class="grid-lines"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="particles" id="particles"></div>
+</div>
+
+<div class="page">
+  <div class="left-panel">
+    <div class="college-badge">
+      <div class="badge-dot"></div>
+      <span class="badge-text">Est. 2004 · Surampalem, AP</span>
+    </div>
+    <h1 class="hero-title">Navigate Your<br><span class="accent-word">Campus Smarter</span><br>with AI</h1>
+    <p class="hero-sub">Pragati Engineering College's AI-powered navigation assistant helps students, faculty, and visitors find any location on campus instantly.</p>
+    <div class="features">
+      <div class="feature-item">
+        <div class="feature-icon">🗺️</div>
+        <div class="feature-text"><strong>Instant Directions</strong>Step-by-step navigation to any campus building</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-text"><strong>AI Chat Interface</strong>Ask naturally — just like texting a friend</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text"><strong>All Facilities Covered</strong>Labs, offices, canteen, hostel and more</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num">11+</div><div class="stat-label">Campus Locations</div></div>
+      <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">Departments</div></div>
+      <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">AI Assistance</div></div>
+    </div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <div class="right-panel">
+    <div class="login-card">
+      <div class="card-top">
+        <div class="logo-ring">🎓</div>
+        <div class="card-title">Welcome Back</div>
+        <div class="card-sub">Sign in to access Campus AI Navigator</div>
+      </div>
+      <div class="auth-tabs">
+        <button class="tab-btn" id="loginTab" onclick="switchTab('login')">Sign In</button>
+        <button class="tab-btn active" id="signupTab" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+      <div id="formSection">
+        <div class="field signup-fields active" id="nameField">
+          <label>Full Name</label>
+          <div class="input-wrap"><span class="input-icon">👤</span><input type="text" id="nameInput" placeholder="e.g. Ravi Kumar"></div>
+          <div class="field-error" id="nameError">Please enter your full name.</div>
+        </div>
+        <div class="field signup-fields active" id="rollField">
+          <label>Roll Number</label>
+          <div class="input-wrap"><span class="input-icon">🪪</span><input type="text" id="rollInput" placeholder="e.g. 21B91A0501"></div>
+          <div class="field-error" id="rollError">Please enter your roll number.</div>
+        </div>
+        <div class="field">
+          <label>Email Address</label>
+          <div class="input-wrap"><span class="input-icon">✉️</span><input type="email" id="emailInput" placeholder="you@pragati.ac.in"></div>
+          <div class="field-error" id="emailError">Please enter a valid email address.</div>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="passInput" placeholder="••••••••"></div>
+          <div class="field-error" id="passError">Password must be at least 6 characters.</div>
+        </div>
+        <div class="field signup-fields active" id="confirmField">
+          <label>Confirm Password</label>
+          <div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="confirmInput" placeholder="••••••••"></div>
+          <div class="field-error" id="confirmError">Passwords do not match.</div>
+        </div>
+        <div class="row-between login-fields hidden" id="rememberRow">
+          <label class="remember-label"><input type="checkbox" id="rememberMe"> Remember me</label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+        <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+          <span class="btn-text" id="btnText">Create Account</span>
+          <div class="spinner"><div class="spinner-ring"></div></div>
+        </button>
+        <div class="switch-prompt" id="switchPrompt">
+          Already have an account? <a onclick="switchTab('login')">Sign in</a>
+        </div>
+      </div>
+      <div class="success-msg" id="successMsg">
+        <div class="success-icon">✓</div>
+        <strong id="successTitle">Successfully signed in!</strong>
+        <p id="successSub">Redirecting to Campus AI Navigator…</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const pContainer = document.getElementById('particles');
+for(let i=0;i<25;i++){
+  const p=document.createElement('div'); p.className='particle';
+  p.style.left=Math.random()*100+'vw';
+  p.style.animationDuration=(8+Math.random()*12)+'s';
+  p.style.animationDelay=(Math.random()*12)+'s';
+  pContainer.appendChild(p);
+}
+
+let hasAccount = sessionStorage.getItem('pec_registered') === 'true';
+let mode = 'signup';
+
+window.addEventListener('DOMContentLoaded', () => {
+  if(hasAccount){ activateTab('login'); } else { activateTab('signup'); lockLoginTab(); }
+});
+
+function lockLoginTab(){
+  const lt = document.getElementById('loginTab');
+  lt.style.opacity='0.35'; lt.style.cursor='not-allowed'; lt.title='Please sign up first';
+  let hint = document.getElementById('signupHint');
+  if(!hint){
+    hint=document.createElement('div'); hint.id='signupHint';
+    hint.style.cssText='font-size:12px;color:rgba(255,198,100,0.75);text-align:center;margin:-14px 0 18px;letter-spacing:0.02em;';
+    hint.textContent='✦ Please create an account before signing in';
+    document.querySelector('.auth-tabs').after(hint);
+  }
+}
+function unlockLoginTab(){
+  const lt=document.getElementById('loginTab');
+  lt.style.opacity='1'; lt.style.cursor='pointer'; lt.title='';
+  const hint=document.getElementById('signupHint'); if(hint)hint.remove();
+}
+function activateTab(tab){
+  mode=tab;
+  document.getElementById('loginTab').classList.toggle('active',tab==='login');
+  document.getElementById('signupTab').classList.toggle('active',tab==='signup');
+  document.querySelectorAll('.signup-fields').forEach(f=>f.classList.toggle('active',tab==='signup'));
+  document.querySelectorAll('.login-fields').forEach(f=>f.classList.toggle('hidden',tab==='signup'));
+  document.getElementById('btnText').textContent=tab==='login'?'Sign In':'Create Account';
+  document.getElementById('switchPrompt').innerHTML=tab==='login'
+    ?`Don't have an account? <a onclick="switchTab('signup')">Create one</a>`
+    :`Already have an account? <a onclick="switchTab('login')">Sign in</a>`;
+  clearErrors();
+}
+function switchTab(tab){
+  if(tab==='login'&&!hasAccount){
+    const lt=document.getElementById('loginTab');
+    lt.style.transform='translateX(-4px)';
+    setTimeout(()=>{lt.style.transform='translateX(4px)';},80);
+    setTimeout(()=>{lt.style.transform='translateX(0)';},160);
+    return;
+  }
+  activateTab(tab);
+}
+function clearErrors(){
+  document.querySelectorAll('.field-error').forEach(e=>e.classList.remove('show'));
+  document.querySelectorAll('.field input').forEach(i=>i.classList.remove('error'));
+}
+function showError(fId,eId){
+  const f=document.getElementById(fId),e=document.getElementById(eId);
+  if(f)f.classList.add('error'); if(e)e.classList.add('show');
+}
+function validate(){
+  let ok=true; clearErrors();
+  const email=document.getElementById('emailInput').value.trim();
+  const pass=document.getElementById('passInput').value;
+  if(mode==='signup'){
+    if(!document.getElementById('nameInput').value.trim()){showError('nameInput','nameError');ok=false;}
+    if(!document.getElementById('rollInput').value.trim()){showError('rollInput','rollError');ok=false;}
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showError('emailInput','emailError');ok=false;}
+  if(pass.length<6){showError('passInput','passError');ok=false;}
+  if(mode==='signup'){
+    const c=document.getElementById('confirmInput').value;
+    if(c!==pass){showError('confirmInput','confirmError');ok=false;}
+  }
+  return ok;
+}
+function handleSubmit(){
+  if(!validate())return;
+  const btn=document.getElementById('submitBtn'); btn.classList.add('loading');
+  setTimeout(()=>{
+    btn.classList.remove('loading');
+    if(mode==='signup'){
+      sessionStorage.setItem('pec_registered','true');
+      hasAccount=true;
+      unlockLoginTab();
+      document.getElementById('formSection').style.display='none';
+      const s=document.getElementById('successMsg'); s.classList.add('show');
+      document.getElementById('successTitle').textContent='Account created!';
+      document.getElementById('successSub').textContent='Please sign in with your new account.';
+      setTimeout(()=>{
+        s.classList.remove('show');
+        document.getElementById('formSection').style.display='block';
+        const savedEmail=document.getElementById('emailInput').value;
+        activateTab('login');
+        document.getElementById('emailInput').value=savedEmail;
+        document.getElementById('passInput').value='';
+      },2000);
+    } else {
+      sessionStorage.setItem('pec_loggedin','true');
+      document.getElementById('formSection').style.display='none';
+      const s=document.getElementById('successMsg'); s.classList.add('show');
+      document.getElementById('successTitle').textContent='Successfully signed in!';
+      document.getElementById('successSub').textContent='Redirecting to Campus AI Navigator…';
+      setTimeout(()=>{ window.location.href='/chatbot'; },2000);
+    }
+  },1800);
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Enter')handleSubmit(); });
+</script>
+</body>
+</html>
